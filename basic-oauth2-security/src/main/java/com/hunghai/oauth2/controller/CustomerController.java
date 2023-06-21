@@ -19,15 +19,16 @@ public class CustomerController {
     public ResponseEntity<String> hello(){
         return ResponseEntity.ok("hello is exception");
     }
+
     @GetMapping("/customer/{id}")
-    public ResponseEntity<Customer> getCustomerList(@PathVariable("id") String id){
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    public ResponseEntity<Customer> getCustomerList(@PathVariable("id") String id) {
         List<Customer> customers = this.customers.stream().filter(customer -> customer.getId().equals(id)).toList();
         return ResponseEntity.ok(customers.get(0));
-
     }
-    @GetMapping("/customer/all")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
-    public ResponseEntity<List<Customer>> getCustomerList(){
+    @GetMapping(value = "/customer/all")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<List<Customer>> getCustomerList() {
         List<Customer> customers = this.customers;
         return ResponseEntity.ok(customers);
     }
